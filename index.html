@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="fr" data-lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>heyLeke! — Questionnaire Client</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --hl-navy:       #091831;
+    --hl-navy-mid:   #0d2040;
+    --hl-navy-deep:  #060f1e;
+    --hl-cream:      #fbf7f5;
+    --hl-orange:     #ff6b1c;
+    --hl-text-muted: rgba(251,247,245,0.55);
+    --hl-border:     rgba(251,247,245,0.12);
+    --hl-font-display: 'Bebas Neue', sans-serif;
+    --hl-font-body:    'Montserrat', sans-serif;
+    --max-w: 760px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--hl-navy);
+    color: var(--hl-cream);
+    font-family: var(--hl-font-body);
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  /* ── SHARED CONTAINER ── */
+  .inner {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+
+  @media (max-width: 640px) {
+    .inner { padding: 0 20px; }
+
+    /* Header */
+    .logo-svg { height: 40px; }
+
+    /* Hero */
+    .hero { padding: 52px 0 48px; }
+    .hero-body { font-size: 14px; }
+
+    /* Lang toggle */
+    .lang-btn { padding: 10px 20px; font-size: 11px; }
+
+    /* Form */
+    .form-wrap { padding: 48px 0 80px; }
+    .form-section { margin-bottom: 48px; padding-bottom: 48px; }
+
+    /* Section header */
+    .section-num { font-size: 48px; }
+    .section-title { font-size: 24px; }
+    .section-label { font-size: 9px; }
+
+    /* Questions */
+    .question { margin-bottom: 32px; }
+    .q-label { font-size: 15px; }
+
+    /* Structure box */
+    .structure-box { padding: 20px 20px; font-size: 12px; }
+
+    /* Submit button — full width on mobile */
+    .submit-wrap { align-items: stretch; }
+    .btn-submit { text-align: center; padding: 18px 24px; }
+
+    /* Success screen */
+    .success-screen { padding: 64px 0; }
+    .success-title { font-size: 36px; }
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--hl-navy-deep);
+    border-bottom: 1px solid var(--hl-border);
+    padding: 20px 0;
+  }
+
+  .header .inner {
+    display: flex;
+    align-items: center;
+  }
+
+  .logo-svg {
+    height: 55px;
+    width: auto;
+    display: block;
+  }
+
+  /* hide white background rects */
+  .logo-svg .logo-bg { display: none; }
+
+  /* flip dark letterforms to cream on navy header */
+  .logo-svg .logo-letters { fill: #fbf7f5; }
+
+  /* exclamation mark stays orange */
+  .logo-svg .logo-exclaim { fill: #ff6b1c; }
+
+  /* ── HERO ── */
+  .hero {
+    border-bottom: 3px solid var(--hl-orange);
+    padding: 80px 0 72px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -100px;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,107,28,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero .inner { position: relative; z-index: 1; }
+
+  .hero-eyebrow {
+    font-family: var(--hl-font-body);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--hl-orange);
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .hero-title {
+    font-family: var(--hl-font-display);
+    font-size: clamp(52px, 9vw, 88px);
+    line-height: 0.95;
+    color: var(--hl-cream);
+    margin-bottom: 32px;
+    letter-spacing: 2px;
+  }
+
+  .hero-body {
+    font-size: 15px;
+    color: var(--hl-text-muted);
+    line-height: 1.8;
+    margin-bottom: 40px;
+  }
+
+  /* ── LANGUAGE TOGGLE (under intro) ── */
+  .lang-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    border: 1px solid rgba(255,107,28,0.4);
+  }
+
+  .lang-btn {
+    background: transparent;
+    border: none;
+    color: var(--hl-text-muted);
+    font-family: var(--hl-font-body);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 12px 28px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .lang-btn.active {
+    background: var(--hl-orange);
+    color: var(--hl-navy);
+  }
+
+  .lang-btn:not(.active):hover {
+    color: var(--hl-cream);
+  }
+
+  /* ── FORM LAYOUT ── */
+  .form-wrap {
+    padding: 72px 0 120px;
+  }
+
+  .form-wrap .inner { }
+
+  /* ── SECTION ── */
+  .form-section {
+    margin-bottom: 72px;
+    padding-bottom: 72px;
+    border-bottom: 1px solid var(--hl-border);
+  }
+
+  .form-section:last-of-type { border-bottom: none; }
+
+  .section-meta {
+    margin-bottom: 36px;
+  }
+
+  /* ── MULTI-SELECT HINT ── */
+  .q-hint {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--hl-text-muted);
+    margin-bottom: 12px;
+  }
+
+  /* ── CONDITIONAL OTHER FIELD ── */
+  .other-specify {
+    display: none;
+    margin-top: 10px;
+  }
+  .other-specify.visible { display: block; }
+
+  .section-header {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+  }
+
+  .section-num {
+    font-family: var(--hl-font-display);
+    font-size: 72px;
+    line-height: 0.7;
+    color: rgba(255,107,28,0.14);
+    flex-shrink: 0;
+    margin-bottom: 0;
+  }
+
+  .section-text {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-bottom: 0;
+  }
+
+  .section-label {
+    font-family: var(--hl-font-body);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--hl-orange);
+    display: block;
+    line-height: 1;
+  }
+
+  .section-title {
+    font-family: var(--hl-font-display);
+    font-size: 32px;
+    letter-spacing: 1.5px;
+    color: var(--hl-cream);
+    line-height: 1;
+  }
+
+  /* ── QUESTIONS ── */
+  .question {
+    margin-bottom: 44px;
+  }
+
+  .q-header {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .q-num {
+    font-family: var(--hl-font-body);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--hl-orange);
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  .q-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--hl-cream);
+    line-height: 1.45;
+  }
+
+  .q-context {
+    background: var(--hl-navy-mid);
+    border-left: 3px solid var(--hl-orange);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: var(--hl-text-muted);
+    line-height: 1.75;
+  }
+
+  /* ── INPUTS ── */
+  textarea, input[type="text"] {
+    width: 100%;
+    background: var(--hl-navy-mid);
+    border: 1px solid var(--hl-border);
+    color: var(--hl-cream);
+    font-family: var(--hl-font-body);
+    font-size: 14px;
+    padding: 16px 20px;
+    outline: none;
+    transition: border-color 0.2s;
+    resize: vertical;
+    border-radius: 0;
+    -webkit-appearance: none;
+  }
+
+  textarea { min-height: 120px; }
+
+  textarea:focus, input[type="text"]:focus { border-color: var(--hl-orange); }
+
+  textarea::placeholder, input[type="text"]::placeholder {
+    color: rgba(251,247,245,0.22);
+    font-style: italic;
+  }
+
+  /* ── CHECKBOXES / RADIOS ── */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    cursor: pointer;
+    padding: 14px 18px;
+    background: var(--hl-navy-mid);
+    border: 1px solid var(--hl-border);
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .option:hover { border-color: rgba(255,107,28,0.35); }
+
+  .option input[type="checkbox"],
+  .option input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 17px;
+    height: 17px;
+    min-width: 17px;
+    border: 2px solid rgba(251,247,245,0.35);
+    background: transparent;
+    cursor: pointer;
+    margin-top: 2px;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .option input[type="radio"] { border-radius: 50%; }
+
+  .option input[type="checkbox"]:checked,
+  .option input[type="radio"]:checked {
+    background: var(--hl-orange);
+    border-color: var(--hl-orange);
+  }
+
+  .option input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--hl-navy);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .option input[type="radio"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 6px; height: 6px;
+    background: var(--hl-navy);
+    border-radius: 50%;
+  }
+
+  .option.checked {
+    border-color: rgba(255,107,28,0.45);
+    background: rgba(255,107,28,0.05);
+  }
+
+  .option-text {
+    font-size: 14px;
+    color: var(--hl-cream);
+    line-height: 1.5;
+  }
+
+  /* ── PAGE STRUCTURE BOX ── */
+  .structure-box {
+    background: var(--hl-navy-deep);
+    border: 1px solid var(--hl-border);
+    border-left: 3px solid var(--hl-orange);
+    padding: 28px 32px;
+    margin-bottom: 12px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    color: var(--hl-cream);
+    line-height: 2.2;
+  }
+
+  .structure-box .page-num { color: var(--hl-orange); font-weight: 700; }
+  .structure-box .cms-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--hl-orange);
+    opacity: 0.7;
+    margin-left: 6px;
+  }
+  .structure-box .page-sub {
+    color: var(--hl-text-muted);
+    font-size: 11px;
+    padding-left: 36px;
+    display: block;
+    line-height: 1.6;
+    margin-top: -4px;
+    margin-bottom: 4px;
+  }
+
+  .structure-note {
+    font-size: 12px;
+    color: var(--hl-text-muted);
+    font-style: italic;
+    line-height: 1.7;
+    margin-bottom: 28px;
+    padding-left: 4px;
+  }
+
+  /* ── SUBMIT ── */
+  .submit-wrap {
+    margin-top: 48px;
+    padding-top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .submit-note {
+    font-size: 13px;
+    color: var(--hl-text-muted);
+    line-height: 1.7;
+  }
+
+  .btn-submit {
+    background: var(--hl-orange);
+    color: var(--hl-navy);
+    font-family: var(--hl-font-body);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 18px 48px;
+    border: none;
+    cursor: pointer;
+    border-radius: 0;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+
+  .btn-submit:hover { opacity: 0.88; }
+  .btn-submit:active { transform: scale(0.98); }
+  .btn-submit:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  /* ── FOOTER ── */
+  .form-footer {
+    background: var(--hl-navy-deep);
+    border-top: 1px solid var(--hl-border);
+    padding: 32px 0;
+    text-align: center;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--hl-text-muted);
+  }
+
+  /* ── SUCCESS SCREEN ── */
+  .success-screen {
+    display: none;
+    padding: 100px 0;
+    text-align: center;
+  }
+
+  .success-screen.visible { display: block; }
+
+  .success-icon {
+    font-family: var(--hl-font-display);
+    font-size: 80px;
+    color: var(--hl-orange);
+    margin-bottom: 24px;
+    line-height: 1;
+  }
+
+  .success-title {
+    font-family: var(--hl-font-display);
+    font-size: 48px;
+    letter-spacing: 2px;
+    color: var(--hl-cream);
+    margin-bottom: 20px;
+  }
+
+  .success-body {
+    font-size: 15px;
+    color: var(--hl-text-muted);
+    line-height: 1.8;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="inner">
+    <svg class="logo-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="10 0 215 60" aria-label="heyLeke">
+      <defs>
+        <clipPath id="hlg-a"><path d="M 0 0.015625 L 224.761719 0.015625 L 224.761719 59.984375 L 0 59.984375 Z M 0 0.015625 " clip-rule="nonzero"/></clipPath>
+        <clipPath id="hlg-b"><path d="M 10 0.015625 L 218 0.015625 L 218 59.984375 L 10 59.984375 Z M 10 0.015625 " clip-rule="nonzero"/></clipPath>
+        <clipPath id="hlg-c"><path d="M 185 0.015625 L 207.324219 0.015625 L 207.324219 59.984375 L 185 59.984375 Z M 185 0.015625 " clip-rule="nonzero"/></clipPath>
+        <clipPath id="hlg-d"><rect x="0" width="23" y="0" height="60"/></clipPath>
+        <clipPath id="hlg-e"><rect x="0" width="208" y="0" height="60"/></clipPath>
+      </defs>
+      <!-- white background — hidden via CSS .logo-bg -->
+      <g class="logo-bg" clip-path="url(#hlg-a)">
+        <path fill="#ffffff" d="M 0 0.015625 L 224.878906 0.015625 L 224.878906 59.984375 L 0 59.984375 Z M 0 0.015625 " fill-opacity="1" fill-rule="nonzero"/>
+        <path fill="#ffffff" d="M 0 0.015625 L 224.878906 0.015625 L 224.878906 59.984375 L 0 59.984375 Z M 0 0.015625 " fill-opacity="1" fill-rule="nonzero"/>
+      </g>
+      <!-- letterforms + exclamation -->
+      <g clip-path="url(#hlg-b)">
+        <g transform="matrix(1, 0, 0, 1, 10, 0)">
+          <g clip-path="url(#hlg-e)">
+            <!-- heyLeke letters — fill overridden to cream via CSS -->
+            <g class="logo-letters" fill="#072539" fill-opacity="1">
+              <g transform="translate(0.497038, 46.589503)"><g><path d="M 8.046875 -21.40625 C 8.890625 -22.457031 9.945312 -23.171875 11.21875 -23.546875 C 12.5 -23.929688 13.769531 -24.125 15.03125 -24.125 C 17.289062 -24.101562 19.050781 -23.582031 20.3125 -22.5625 C 21.570312 -21.550781 22.441406 -20.21875 22.921875 -18.5625 C 23.398438 -16.914062 23.628906 -15.09375 23.609375 -13.09375 L 23.609375 0 L 16.609375 0 L 16.609375 -13.046875 C 16.609375 -14.628906 16.234375 -15.78125 15.484375 -16.5 C 14.742188 -17.21875 13.90625 -17.578125 12.96875 -17.578125 C 12.289062 -17.578125 11.59375 -17.382812 10.875 -17 C 10.15625 -16.625 9.5625 -16.09375 9.09375 -15.40625 C 8.625 -14.71875 8.390625 -13.890625 8.390625 -12.921875 L 8.390625 0 L 1.0625 0 L 1.0625 -30.984375 L 8.046875 -30.984375 Z M 8.046875 -21.40625 "/></g></g>
+              <g transform="translate(27.173985, 46.589503)"><g><path d="M 25.140625 -11.953125 C 25.140625 -11.015625 25.050781 -10.109375 24.875 -9.234375 L 7.828125 -9.234375 C 8.234375 -8.148438 8.921875 -7.328125 9.890625 -6.765625 C 10.859375 -6.210938 11.867188 -5.921875 12.921875 -5.890625 C 13.679688 -5.890625 14.410156 -6.019531 15.109375 -6.28125 C 15.816406 -6.550781 16.421875 -6.960938 16.921875 -7.515625 L 24.4375 -7.515625 C 23.851562 -5.785156 22.957031 -4.34375 21.75 -3.1875 C 20.550781 -2.03125 19.175781 -1.164062 17.625 -0.59375 C 16.070312 -0.0195312 14.472656 0.265625 12.828125 0.265625 C 11.304688 0.265625 9.8125 0.0078125 8.34375 -0.5 C 6.882812 -1.019531 5.566406 -1.785156 4.390625 -2.796875 C 3.222656 -3.804688 2.296875 -5.078125 1.609375 -6.609375 C 0.921875 -8.148438 0.578125 -9.929688 0.578125 -11.953125 C 0.578125 -13.972656 0.921875 -15.742188 1.609375 -17.265625 C 2.296875 -18.796875 3.222656 -20.066406 4.390625 -21.078125 C 5.566406 -22.085938 6.882812 -22.847656 8.34375 -23.359375 C 9.8125 -23.867188 11.320312 -24.125 12.875 -24.125 C 14.394531 -24.125 15.890625 -23.867188 17.359375 -23.359375 C 18.828125 -22.847656 20.144531 -22.085938 21.3125 -21.078125 C 22.488281 -20.066406 23.421875 -18.796875 24.109375 -17.265625 C 24.796875 -15.742188 25.140625 -13.972656 25.140625 -11.953125 Z M 17.578125 -14.640625 C 17.253906 -15.835938 16.644531 -16.710938 15.75 -17.265625 C 14.863281 -17.828125 13.863281 -18.109375 12.75 -18.109375 C 11.71875 -18.109375 10.769531 -17.820312 9.90625 -17.25 C 9.039062 -16.675781 8.4375 -15.804688 8.09375 -14.640625 Z M 17.578125 -14.640625 "/></g></g>
+              <g transform="translate(55.30124, 46.589503)"><g><path d="M 23.421875 -22.6875 C 21.460938 -17.726562 19.507812 -12.785156 17.5625 -7.859375 C 15.613281 -2.941406 13.671875 1.988281 11.734375 6.9375 L 4.578125 6.9375 L 4.578125 5.890625 L 7.640625 -1.9375 L -0.265625 -22.6875 L -0.265625 -23.78125 L 6.9375 -23.78125 L 9.890625 -16.171875 L 11.5625 -10.15625 L 13.3125 -16.171875 L 16.265625 -23.78125 L 23.421875 -23.78125 Z M 23.421875 -22.6875 "/></g></g>
+              <g transform="translate(80.571821, 46.589503)"><g><path d="M 2.203125 -30.765625 L 9.71875 -30.765625 L 9.71875 -7.25 L 22.640625 -7.25 L 22.640625 0 L 2.203125 0 Z M 2.203125 -30.765625 "/></g></g>
+              <g transform="translate(104.787631, 46.589503)"><g><path d="M 25.140625 -11.953125 C 25.140625 -11.015625 25.050781 -10.109375 24.875 -9.234375 L 7.828125 -9.234375 C 8.234375 -8.148438 8.921875 -7.328125 9.890625 -6.765625 C 10.859375 -6.210938 11.867188 -5.921875 12.921875 -5.890625 C 13.679688 -5.890625 14.410156 -6.019531 15.109375 -6.28125 C 15.816406 -6.550781 16.421875 -6.960938 16.921875 -7.515625 L 24.4375 -7.515625 C 23.851562 -5.785156 22.957031 -4.34375 21.75 -3.1875 C 20.550781 -2.03125 19.175781 -1.164062 17.625 -0.59375 C 16.070312 -0.0195312 14.472656 0.265625 12.828125 0.265625 C 11.304688 0.265625 9.8125 0.0078125 8.34375 -0.5 C 6.882812 -1.019531 5.566406 -1.785156 4.390625 -2.796875 C 3.222656 -3.804688 2.296875 -5.078125 1.609375 -6.609375 C 0.921875 -8.148438 0.578125 -9.929688 0.578125 -11.953125 C 0.578125 -13.972656 0.921875 -15.742188 1.609375 -17.265625 C 2.296875 -18.796875 3.222656 -20.066406 4.390625 -21.078125 C 5.566406 -22.085938 6.882812 -22.847656 8.34375 -23.359375 C 9.8125 -23.867188 11.320312 -24.125 12.875 -24.125 C 14.394531 -24.125 15.890625 -23.867188 17.359375 -23.359375 C 18.828125 -22.847656 20.144531 -22.085938 21.3125 -21.078125 C 22.488281 -20.066406 23.421875 -18.796875 24.109375 -17.265625 C 24.796875 -15.742188 25.140625 -13.972656 25.140625 -11.953125 Z M 17.578125 -14.640625 C 17.253906 -15.835938 16.644531 -16.710938 15.75 -17.265625 C 14.863281 -17.828125 13.863281 -18.109375 12.75 -18.109375 C 11.71875 -18.109375 10.769531 -17.820312 9.90625 -17.25 C 9.039062 -16.675781 8.4375 -15.804688 8.09375 -14.640625 Z M 17.578125 -14.640625 "/></g></g>
+              <g transform="translate(132.914879, 46.589503)"><g><path d="M 14.28125 -11.953125 L 23.125 -0.3125 L 23.125 0 L 15.03125 0 L 8.21875 -9.28125 L 8.21875 0 L 1.3125 0 L 1.3125 -30.765625 L 8.21875 -30.765625 L 8.21875 -14.421875 L 14.765625 -23.78125 L 22.328125 -23.78125 L 22.328125 -23.421875 Z M 14.28125 -11.953125 "/></g></g>
+              <g transform="translate(157.482287, 46.589503)"><g><path d="M 25.140625 -11.953125 C 25.140625 -11.015625 25.050781 -10.109375 24.875 -9.234375 L 7.828125 -9.234375 C 8.234375 -8.148438 8.921875 -7.328125 9.890625 -6.765625 C 10.859375 -6.210938 11.867188 -5.921875 12.921875 -5.890625 C 13.679688 -5.890625 14.410156 -6.019531 15.109375 -6.28125 C 15.816406 -6.550781 16.421875 -6.960938 16.921875 -7.515625 L 24.4375 -7.515625 C 23.851562 -5.785156 22.957031 -4.34375 21.75 -3.1875 C 20.550781 -2.03125 19.175781 -1.164062 17.625 -0.59375 C 16.070312 -0.0195312 14.472656 0.265625 12.828125 0.265625 C 11.304688 0.265625 9.8125 0.0078125 8.34375 -0.5 C 6.882812 -1.019531 5.566406 -1.785156 4.390625 -2.796875 C 3.222656 -3.804688 2.296875 -5.078125 1.609375 -6.609375 C 0.921875 -8.148438 0.578125 -9.929688 0.578125 -11.953125 C 0.578125 -13.972656 0.921875 -15.742188 1.609375 -17.265625 C 2.296875 -18.796875 3.222656 -20.066406 4.390625 -21.078125 C 5.566406 -22.085938 6.882812 -22.847656 8.34375 -23.359375 C 9.8125 -23.867188 11.320312 -24.125 12.875 -24.125 C 14.394531 -24.125 15.890625 -23.867188 17.359375 -23.359375 C 18.828125 -22.847656 20.144531 -22.085938 21.3125 -21.078125 C 22.488281 -20.066406 23.421875 -18.796875 24.109375 -17.265625 C 24.796875 -15.742188 25.140625 -13.972656 25.140625 -11.953125 Z M 17.578125 -14.640625 C 17.253906 -15.835938 16.644531 -16.710938 15.75 -17.265625 C 14.863281 -17.828125 13.863281 -18.109375 12.75 -18.109375 C 11.71875 -18.109375 10.769531 -17.820312 9.90625 -17.25 C 9.039062 -16.675781 8.4375 -15.804688 8.09375 -14.640625 Z M 17.578125 -14.640625 "/></g></g>
+            </g>
+            <!-- exclamation mark — stays orange via CSS .logo-exclaim -->
+            <g clip-path="url(#hlg-c)">
+              <g transform="matrix(1, 0, 0, 1, 185, 0)">
+                <g clip-path="url(#hlg-d)">
+                  <g class="logo-exclaim" fill-opacity="1">
+                    <g transform="translate(0.641352, 48.337458)"><g><path d="M 5.734375 -25.65625 C 5.617188 -26.570312 5.488281 -28.046875 5.34375 -30.078125 L 4.9375 -33.96875 L 4.703125 -37.015625 L 4.59375 -38.625 L 4.59375 -39.484375 L 17.390625 -39.484375 L 17.390625 -38.625 L 17.328125 -37.015625 L 17.046875 -33.96875 L 16.703125 -30.078125 L 16.234375 -25.65625 L 15.09375 -14.125 L 6.890625 -14.125 Z M 5.171875 -9.359375 L 16.765625 -9.359375 L 16.765625 0 L 5.171875 0 Z M 5.171875 -9.359375 "/></g></g>
+                  </g>
+                </g>
+              </g>
+            </g>
+          </g>
+        </g>
+      </g>
+    </svg>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="inner">
+    <span class="hero-eyebrow" data-fr="Questionnaire de découverte" data-en="Discovery Questionnaire">Questionnaire de découverte</span>
+    <h1 class="hero-title">NÈGÈS MAWON</h1>
+    <p class="hero-body" data-fr="Merci de prendre le temps de remplir ce questionnaire. Vos réponses orienteront toute la direction du projet — plus vous pouvez partager de détails, mieux c'est. Vous êtes libre de répondre en français." data-en="Thank you for taking the time to fill this in. Your answers will shape the entire direction of the project — the more detail you can share, the better. You are welcome to answer in French.">Merci de prendre le temps de remplir ce questionnaire. Vos réponses orienteront toute la direction du projet — plus vous pouvez partager de détails, mieux c'est. Vous êtes libre de répondre en français.</p>
+    <div class="lang-toggle" role="group" aria-label="Language / Langue">
+      <button class="lang-btn active" data-target="fr" onclick="setLang('fr')" data-fr="Français" data-en="Français">Français</button>
+      <button class="lang-btn" data-target="en" onclick="setLang('en')" data-fr="English" data-en="English">English</button>
+    </div>
+  </div>
+</div>
+
+<!-- FORM -->
+<form id="discovery-form" class="form-wrap" onsubmit="handleSubmit(event)">
+  <div class="inner">
+
+  <!-- SECTION 1: GOALS & AUDIENCE -->
+  <div class="form-section">
+    <div class="section-meta">
+      <div class="section-header">
+        <div class="section-num">01</div>
+        <div class="section-text">
+          <span class="section-label" data-fr="Section 1" data-en="Section 1">Section 1</span>
+          <div class="section-title" data-fr="OBJECTIFS ET PUBLIC" data-en="GOALS & AUDIENCE">OBJECTIFS ET PUBLIC</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="q-header">
+        <span class="q-num">01</span>
+        <div class="q-label" data-fr="Quel est l'objectif principal du nouveau site web ?" data-en="What is the primary purpose of the new website?">Quel est l'objectif principal du nouveau site web ?</div>
+      </div>
+      <p class="q-hint" data-fr="Plusieurs réponses possibles" data-en="You may select more than one">Plusieurs réponses possibles</p>
+      <div class="options">
+        <label class="option">
+          <input type="checkbox" name="q1" value="info">
+          <span class="option-text" data-fr="Partager des informations sur la fondation" data-en="Share information about the foundation">Partager des informations sur la fondation</span>
+        </label>
+        <label class="option">
+          <input type="checkbox" name="q1" value="donors">
+          <span class="option-text" data-fr="Attirer des donateurs" data-en="Attract donors">Attirer des donateurs</span>
+        </label>
+        <label class="option">
+          <input type="checkbox" name="q1" value="partners">
+          <span class="option-text" data-fr="Attirer des partenaires ou commanditaires" data-en="Attract partners or sponsors">Attirer des partenaires ou commanditaires</span>
+        </label>
+        <label class="option">
+          <input type="checkbox" name="q1" value="other" id="q1-other-check">
+          <span class="option-text" data-fr="Autre" data-en="Other">Autre</span>
+        </label>
+      </div>
+      <div class="other-specify" id="q1-other-field">
+        <input type="text" name="q1_other" data-fr-placeholder="Précisez…" data-en-placeholder="Please specify…" placeholder="Précisez…">
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="q-header">
+        <span class="q-num">02</span>
+        <div class="q-label" data-fr="Qui est le public principal de ce site web ? Décrivez-les aussi précisément que possible." data-en="Who is the main audience for this website? Describe them as specifically as you can.">Qui est le public principal de ce site web ? Décrivez-les aussi précisément que possible.</div>
+      </div>
+      <textarea name="q2" data-fr-placeholder="Votre réponse…" data-en-placeholder="Your answer…" placeholder="Votre réponse…"></textarea>
+    </div>
+  </div>
+
+  <!-- SECTION 2: PLATFORM -->
+  <div class="form-section">
+    <div class="section-meta">
+      <div class="section-header">
+        <div class="section-num">02</div>
+        <div class="section-text">
+          <span class="section-label" data-fr="Section 2" data-en="Section 2">Section 2</span>
+          <div class="section-title" data-fr="PLATEFORME" data-en="PLATFORM">PLATEFORME</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="q-header">
+        <span class="q-num">03</span>
+        <div class="q-label" data-fr="Êtes-vous à l'aise pour quitter WordPress et passer à Webflow ?" data-en="Are you comfortable moving away from WordPress to Webflow?">Êtes-vous à l'aise pour quitter WordPress et passer à Webflow ?</div>
+      </div>
+      <div class="q-context" data-fr="Nous prévoyons de migrer votre site de WordPress vers Webflow. Webflow nous offre un meilleur contrôle du design, de meilleures performances et une maintenance à long terme plus simple — sans avoir besoin d'un développeur pour les mises à jour courantes." data-en="We plan to migrate your site from WordPress to Webflow. Webflow gives us more precise design control, better performance, and easier long-term maintenance — without needing a developer for routine updates.">Nous prévoyons de migrer votre site de WordPress vers Webflow. Webflow nous offre un meilleur contrôle du design, de meilleures performances et une maintenance à long terme plus simple — sans avoir besoin d'un développeur pour les mises à jour courantes.</div>
+      <div class="options">
+        <label class="option">
+          <input type="radio" name="q3" value="yes">
+          <span class="option-text" data-fr="Oui, je fais confiance à votre recommandation" data-en="Yes, I trust your recommendation">Oui, je fais confiance à votre recommandation</span>
+        </label>
+        <label class="option">
+          <input type="radio" name="q3" value="questions">
+          <span class="option-text" data-fr="J'ai des questions — pouvez-vous m'en dire plus avant de décider ?" data-en="I have questions — please explain more before we decide">J'ai des questions — pouvez-vous m'en dire plus avant de décider ?</span>
+        </label>
+        <label class="option">
+          <input type="radio" name="q3" value="stay">
+          <span class="option-text" data-fr="Je préfère rester sur WordPress" data-en="I would prefer to stay on WordPress">Je préfère rester sur WordPress</span>
+        </label>
+      </div>
+      <textarea name="q3_comments" style="margin-top:10px;" data-fr-placeholder="Commentaires (optionnel)…" data-en-placeholder="Any comments (optional)…" placeholder="Commentaires (optionnel)…"></textarea>
+    </div>
+  </div>
+
+  <!-- SECTION 3: DONATIONS -->
+  <div class="form-section">
+    <div class="section-meta">
+      <div class="section-header">
+        <div class="section-num">03</div>
+        <div class="section-text">
+          <span class="section-label" data-fr="Section 3" data-en="Section 3">Section 3</span>
+          <div class="section-title" data-fr="DONS" data-en="DONATIONS">DONS</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="q-header">
+        <span class="q-num">04</span>
+        <div class="q-label" data-fr="Y a-t-il quelque chose dans votre configuration de dons actuelle qui ne fonctionne pas pour vous ?" data-en="Is there anything about your current donation setup that isn't working for you?">Y a-t-il quelque chose dans votre configuration de dons actuelle qui ne fonctionne pas pour vous ?</div>
+      </div>
+      <div class="q-context" data-fr="Nous pouvons voir que votre site actuel utilise Every.org pour collecter des dons. Nous avons examiné la plateforme et elle est bien adaptée à vos besoins — elle ne facture aucun frais de plateforme, est spécialement conçue pour les organisations à but non lucratif et prend en charge plusieurs moyens de paiement. Notre recommandation est de continuer à l'utiliser. Le nouveau site sera conçu pour diriger les visiteurs vers votre page de dons Every.org ; nous gérons le marketing et le parcours utilisateur, Every.org gère la transaction." data-en="We can see that your current site uses Every.org to collect donations. We've reviewed the platform and it is well-suited for your needs — it charges no platform fees, is purpose-built for nonprofit fundraising, and supports multiple payment methods. Our recommendation is to keep using it. The new site will be designed to drive visitors toward your Every.org donation page; we handle the marketing and the journey, Every.org handles the transaction.">Nous pouvons voir que votre site actuel utilise Every.org pour collecter des dons. Nous avons examiné la plateforme et elle est bien adaptée à vos besoins — elle ne facture aucun frais de plateforme, est spécialement conçue pour les organisations à but non lucratif et prend en charge plusieurs moyens de paiement. Notre recommandation est de continuer à l'utiliser. Le nouveau site sera conçu pour diriger les visiteurs vers votre page de dons Every.org ; nous gérons le marketing et le parcours utilisateur, Every.org gère la transaction.</div>
+      <textarea name="q4" data-fr-placeholder="Votre réponse…" data-en-placeholder="Your answer…" placeholder="Votre réponse…"></textarea>
+    </div>
+
+    <div class="question">
+      <div class="q-header">
+        <span class="q-num">05</span>
+        <div class="q-label" data-fr="Existe-t-il d'autres outils sur le site actuel qui doivent continuer à fonctionner ? (ex : inscription à la newsletter, calendrier d'événements, flux des réseaux sociaux)" data-en="Are there any other tools currently on the site that must continue working? (e.g. newsletter signup, event calendar, social media feeds)">Existe-t-il d'autres outils sur le site actuel qui doivent continuer à fonctionner ? (ex : inscription à la newsletter, calendrier d'événements, flux des réseaux sociaux)</div>
+      </div>
+      <textarea name="q5" data-fr-placeholder="Votre réponse…" data-en-placeholder="Your answer…" placeholder="Votre réponse…"></textarea>
+    </div>
+  </div>
+
+  <!-- SECTION 4: LANGUAGE -->
+  <div class="form-section">
+    <div class="section-meta">
+      <div class="section-header">
+        <div class="section-num">04</div>
+        <div class="section-text">
+          <span class="section-label" data-fr="Section 4" data-en="Section 4">Section 4</span>
+          <div class="section-title" data-fr="LANGUE" data-en="LANGUAGE">LANGUE</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="q-header">
+        <span class="q-num">06</span>
+        <div class="q-label" data-fr="D'où viennent principalement vos donateurs et soutiens ?" data-en="Where do your donors and supporters primarily come from?">D'où viennent principalement vos donateurs et soutiens ?</div>
+      </div>
+      <div class="q-context" data-fr="Cela nous aide à choisir la langue de base du site — celle que tous les visiteurs voient en premier. Le site peut prendre en charge plusieurs langues, mais la langue de base doit correspondre à votre public principal." data-en="This helps us choose the right base language for the site — the default that all visitors see first. The site can support additional languages, but the base language should match your primary audience.">Cela nous aide à choisir la langue de base du site — celle que tous les visiteurs voient en premier. Le site peut prendre en charge plusieurs langues, mais la langue de base doit correspondre à votre public principal.</div>
+      <div class="options">
+        <label class="option">
+          <input type="radio" name="q6" value="haiti">
+          <span class="option-text" data-fr="Principalement d'Haïti et de la diaspora haïtienne (francophones ou créolophones)" data-en="Mostly from Haiti and the Haitian diaspora (French or Creole speakers)">Principalement d'Haïti et de la diaspora haïtienne (francophones ou créolophones)</span>
+        </label>
+        <label class="option">
+          <input type="radio" name="q6" value="international">
+          <span class="option-text" data-fr="Principalement de donateurs internationaux hors d'Haïti (anglophones)" data-en="Mostly from international donors outside Haiti (English speakers)">Principalement de donateurs internationaux hors d'Haïti (anglophones)</span>
+        </label>
+        <label class="option">
+          <input type="radio" name="q6" value="mixed">
+          <span class="option-text" data-fr="Un mélange à peu près égal des deux" data-en="Roughly equal mix of both">Un mélange à peu près égal des deux</span>
+        </label>
+        <label class="option">
+          <input type="radio" name="q6" value="unsure">
+          <span class="option-text" data-fr="Je ne suis pas certain(e)" data-en="I'm not sure">Je ne suis pas certain(e)</span>
+        </label>
+      </div>
+      <textarea name="q6_notes" style="margin-top:10px;" data-fr-placeholder="Notes (optionnel)…" data-en-placeholder="Notes (optional)…" placeholder="Notes (optionnel)…"></textarea>
+    </div>
+  </div>
+
+  <!-- SECTION 5: DESIGN DIRECTION -->
+  <div class="form-section">
+    <div class="section-meta">
+      <div class="section-header">
+        <div class="section-num">05</div>
+        <div class="section-text">
+          <span class="section-label" data-fr="Section 5" data-en="Section 5">Section 5</span>
+          <div class="section-title" data-fr="DIRECTION VISUELLE" data-en="DESIGN DIRECTION">DIRECTION VISUELLE</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="q-header">
+        <span class="q-num">07</span>
+        <div class="q-label" data-fr="Y a-t-il quelque chose que vous souhaitez spécifiquement éviter — visuellement ou en termes de fonctionnement du site ?" data-en="Is there anything you specifically want to avoid — visually or in terms of how the site works?">Y a-t-il quelque chose que vous souhaitez spécifiquement éviter — visuellement ou en termes de fonctionnement du site ?</div>
+      </div>
+      <textarea name="q7" data-fr-placeholder="Votre réponse…" data-en-placeholder="Your answer…" placeholder="Votre réponse…"></textarea>
+    </div>
+  </div>
+
+  <!-- SECTION 6: PAGES & STRUCTURE -->
+  <div class="form-section">
+    <div class="section-meta">
+      <div class="section-header">
+        <div class="section-num">06</div>
+        <div class="section-text">
+          <span class="section-label" data-fr="Section 6" data-en="Section 6">Section 6</span>
+          <div class="section-title" data-fr="PAGES ET STRUCTURE" data-en="PAGES & STRUCTURE">PAGES ET STRUCTURE</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="q-context" style="margin-bottom:20px;" data-fr="Sur la base de notre analyse du site actuel, nous proposons la structure suivante pour le nouveau site. Elle regroupe vos pages actuelles en une expérience plus claire et plus simple." data-en="Based on our review of the current site, we are proposing the following structure for the new site. It consolidates your current pages into a cleaner, simpler experience.">Sur la base de notre analyse du site actuel, nous proposons la structure suivante pour le nouveau site. Elle regroupe vos pages actuelles en une expérience plus claire et plus simple.</div>
+
+    <div class="structure-box">
+      <div><span class="page-num">01 —</span> Accueil</div>
+      <div><span class="page-num">02 —</span> Qui sommes-nous</div>
+      <div><span class="page-num">03 —</span> Nos Actions <span class="cms-tag">(CMS)</span></div>
+      <span class="page-sub">Marrainage · Maison Claire Heureuse · CFEGES · Justice Reproductive · Bourse Antoinette Duclaire · Festival Féministe</span>
+      <div><span class="page-num">04 —</span> Alaso <span class="cms-tag">(CMS)</span></div>
+      <div><span class="page-num">05 —</span> Actualités <span class="cms-tag">(CMS)</span></div>
+      <div><span class="page-num">06 —</span> Faire un Don</div>
+    </div>
+
+    <p class="structure-note" data-fr="Note : Les coordonnées, l'inscription à la newsletter (Bilten Nègès) et le Rapport Annuel figureront dans le pied de page et sur la page Qui sommes-nous — et non comme éléments de navigation séparés." data-en="Note: Contact information, the newsletter signup (Bilten Nègès), and the Annual Report will live in the footer and on the Qui sommes-nous page — not as separate nav items.">Note : Les coordonnées, l'inscription à la newsletter (Bilten Nègès) et le Rapport Annuel figureront dans le pied de page et sur la page Qui sommes-nous — et non comme éléments de navigation séparés.</p>
+
+    <div class="question">
+      <div class="q-header">
+        <span class="q-num">08</span>
+        <div class="q-label" data-fr="Cette structure vous convient-elle ? Manque-t-il quelque chose ou y a-t-il des erreurs ?" data-en="Does this structure work for you? Is anything missing or incorrect?">Cette structure vous convient-elle ? Manque-t-il quelque chose ou y a-t-il des erreurs ?</div>
+      </div>
+      <textarea name="q8" data-fr-placeholder="Votre réponse…" data-en-placeholder="Your answer…" placeholder="Votre réponse…"></textarea>
+    </div>
+
+    <div class="question">
+      <div class="q-header">
+        <span class="q-num">09</span>
+        <div class="q-label" data-fr="Le site actuel contient une section appelée « Documentation ». Que contient-elle, et est-il important de la conserver sur le nouveau site ?" data-en='The current site has a section called "Documentation." What does this contain, and is it important to keep on the new site?'>Le site actuel contient une section appelée « Documentation ». Que contient-elle, et est-il important de la conserver sur le nouveau site ?</div>
+      </div>
+      <textarea name="q9" data-fr-placeholder="Votre réponse…" data-en-placeholder="Your answer…" placeholder="Votre réponse…"></textarea>
+    </div>
+  </div>
+
+  <!-- SECTION 7: ANYTHING ELSE -->
+  <div class="form-section">
+    <div class="section-meta">
+      <div class="section-header">
+        <div class="section-num">07</div>
+        <div class="section-text">
+          <span class="section-label" data-fr="Section 7" data-en="Section 7">Section 7</span>
+          <div class="section-title" data-fr="AUTRE CHOSE ?" data-en="ANYTHING ELSE?">AUTRE CHOSE ?</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="q-header">
+        <span class="q-num">10</span>
+        <div class="q-label" data-fr="Y a-t-il autre chose que vous aimeriez nous faire savoir avant que nous commencions ?" data-en="Is there anything else you'd like us to know before we begin?">Y a-t-il autre chose que vous aimeriez nous faire savoir avant que nous commencions ?</div>
+      </div>
+      <textarea name="q10" data-fr-placeholder="Votre réponse…" data-en-placeholder="Your answer…" placeholder="Votre réponse…"></textarea>
+    </div>
+  </div>
+
+  <!-- SUBMIT -->
+  <div class="submit-wrap">
+    <p class="submit-note" data-fr="Vos réponses seront transmises directement à notre équipe. Merci de votre temps — nous nous réjouissons de travailler avec vous." data-en="Your responses will be sent directly to our team. Thank you for your time — we look forward to working with you.">Vos réponses seront transmises directement à notre équipe. Merci de votre temps — nous nous réjouissons de travailler avec vous.</p>
+    <button type="submit" class="btn-submit" data-fr="Envoyer mes réponses" data-en="Submit my answers">Envoyer mes réponses</button>
+  </div>
+
+  </div><!-- /inner -->
+</form>
+
+<!-- SUCCESS SCREEN -->
+<div id="success-screen" class="success-screen">
+  <div class="inner" style="text-align:center;">
+    <div class="success-icon">✓</div>
+    <div class="success-title" data-fr="REÇU." data-en="RECEIVED.">REÇU.</div>
+    <p class="success-body" data-fr="Merci — nous avons bien reçu vos réponses. Notre équipe vous contactera prochainement pour confirmer les prochaines étapes." data-en="Thank you — we've received your responses. Our team will be in touch shortly to confirm next steps.">Merci — nous avons bien reçu vos réponses. Notre équipe vous contactera prochainement pour confirmer les prochaines étapes.</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="form-footer">
+  <div class="inner">heyLeke! &nbsp;·&nbsp; Confidentiel / Confidential</div>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.documentElement.setAttribute('data-lang', lang);
+    document.documentElement.setAttribute('lang', lang);
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.target === lang);
+    });
+
+    document.querySelectorAll('[data-fr][data-en]').forEach(el => {
+      if (!el.classList.contains('lang-btn')) {
+        el.textContent = el.dataset[lang];
+      }
+    });
+
+    document.querySelectorAll('[data-fr-placeholder][data-en-placeholder]').forEach(el => {
+      el.placeholder = lang === 'fr' ? el.dataset.frPlaceholder : el.dataset.enPlaceholder;
+    });
+  }
+
+  document.querySelectorAll('.option input').forEach(input => {
+    input.addEventListener('change', () => {
+      if (input.type === 'radio') {
+        document.querySelectorAll(`input[name="${input.name}"]`).forEach(r => {
+          r.closest('.option').classList.remove('checked');
+        });
+      }
+      input.closest('.option').classList.toggle('checked', input.checked);
+
+      // Conditional "Other" specify fields
+      if (input.id === 'q1-other-check') {
+        const field = document.getElementById('q1-other-field');
+        field.classList.toggle('visible', input.checked);
+        if (!input.checked) field.querySelector('input').value = '';
+      }
+    });
+  });
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const btn = document.querySelector('.btn-submit');
+    const lang = document.documentElement.getAttribute('data-lang');
+    btn.disabled = true;
+    btn.textContent = lang === 'fr' ? 'Envoi en cours…' : 'Sending…';
+
+    const data = {};
+    new FormData(e.target).forEach((val, key) => {
+      data[key] = data[key]
+        ? (Array.isArray(data[key]) ? [...data[key], val] : [data[key], val])
+        : val;
+    });
+
+    const WEBHOOK_URL = 'https://primary-production-c18f.up.railway.app/webhook/neges-mawon-discovery';
+    try {
+      await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ source: 'neges-mawon-discovery', lang, ...data })
+      });
+    } catch (err) {
+      console.warn('Webhook error — data logged locally:', data);
+    }
+
+    document.getElementById('discovery-form').style.display = 'none';
+    const screen = document.getElementById('success-screen');
+    screen.classList.add('visible');
+    setLang(lang);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
